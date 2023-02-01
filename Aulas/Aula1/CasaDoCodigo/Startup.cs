@@ -29,6 +29,7 @@ namespace CasaDoCodigo
 
                 options.UseSqlServer(connectionString)
             );
+            services.AddTransient<IDataService,DataService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +58,7 @@ namespace CasaDoCodigo
             //caso o banco de dados não exista, esse comando o criará!
             //O único problema  é que depois que vc usa esse método vc não poderá mais gerar nenhuma migration no seu sistema!
             //Por isso trocaremos esse método pelo o método Migrate();
-            serviceProvider.GetService<ApplicationContext>().Database.Migrate();
+            serviceProvider.GetService<IDataService>().InicializaDB();
         }
     }
 }
