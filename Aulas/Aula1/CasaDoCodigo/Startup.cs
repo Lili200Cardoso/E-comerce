@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CasaDoCodigo.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace CasaDoCodigo
                 options.UseSqlServer(connectionString)
             );
             services.AddTransient<IDataService,DataService>();
+            services.AddTransient<IProdutoRepository, ProdutoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,10 +56,7 @@ namespace CasaDoCodigo
                     name: "default",
                     template: "{controller=Pedido}/{action=Carrossel}/{id?}");
             });
-            //EnsureCreated()
-            //caso o banco de dados não exista, esse comando o criará!
-            //O único problema  é que depois que vc usa esse método vc não poderá mais gerar nenhuma migration no seu sistema!
-            //Por isso trocaremos esse método pelo o método Migrate();
+            
             serviceProvider.GetService<IDataService>().InicializaDB();
         }
     }
