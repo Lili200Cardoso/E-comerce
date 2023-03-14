@@ -24,6 +24,8 @@ namespace CasaDoCodigo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDistributedMemoryCache();//Mantém informações na mémoria, conforme navegação(tipo histórico)
+            services.AddSession();//Adicionando um sessão
 
             string connectionString = Configuration.GetConnectionString("CasaDoCodigo");
             services.AddDbContext<ApplicationContext>(options =>
@@ -52,7 +54,7 @@ namespace CasaDoCodigo
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
