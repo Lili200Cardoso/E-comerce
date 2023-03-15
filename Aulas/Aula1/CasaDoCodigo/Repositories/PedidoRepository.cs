@@ -1,5 +1,6 @@
 ﻿using CasaDoCodigo.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -23,18 +24,19 @@ namespace CasaDoCodigo.Repositories
         {
             var produto = _contexto.Set<Produto>()
                             .Where(p => p.Codigo == codigo)
-                            .SingleOrDefault();
+                            .FirstOrDefault();
 
-            if(produto == null)
+            if (produto == null)
             {
                 throw new ArgumentException("Produto não encontrado!");
             }
 
             var pedido = GetPedido();
+
             var itemPedido = _contexto.Set<ItemPedido>()
                                 .Where(i => i.Produto.Codigo == codigo 
                                     && i.Pedido.Id == pedido.Id)
-                                .SingleOrDefault();
+                                .FirstOrDefault();
 
             if (itemPedido == null)
             {
@@ -51,8 +53,10 @@ namespace CasaDoCodigo.Repositories
         {
             var pedidoId = GetPedidoId();
             var pedido = _dbSet
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.Produto)
                 .Where(p => p.Id == pedidoId)
-                .SingleOrDefault();
+                .FirstOrDefault();
 
             if(pedido == null)
             {
